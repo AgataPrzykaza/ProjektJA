@@ -1,0 +1,8 @@
+﻿  pch.cpp
+  CppDll.cpp
+C:\notatki-pulpit\Pulpit\JA 5\SobelFilter\CppDll\CppDll.cpp(12,1): warning C4273: "kik": niespójne powiązanie biblioteki dll
+C:\notatki-pulpit\Pulpit\JA 5\SobelFilter\CppDll\CppDll.h(35,32): message : zobacz poprzednią definicję „kik”
+  dllmain.cpp
+  Generowanie kodu...
+     Trwa tworzenie biblioteki C:\notatki-pulpit\Pulpit\JA 5\SobelFilter\Debug\CppDll.lib i obiektu C:\notatki-pulpit\Pulpit\JA 5\SobelFilter\Debug\CppDll.exp
+  CppDll.vcxproj -> C:\notatki-pulpit\Pulpit\JA 5\SobelFilter\Debug\CppDll.dll
