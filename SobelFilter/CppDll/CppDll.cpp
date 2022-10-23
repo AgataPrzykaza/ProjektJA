@@ -10,6 +10,10 @@ static unsigned index_;               // Current seq. position
 
 int kik()
 {
+    for (int i = 1; i < 1000; i++)
+    {
+        int a = 3;
+    }
     return 5;
 }
 
