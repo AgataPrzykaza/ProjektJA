@@ -1,4 +1,2 @@
 ﻿  SobelFilter.cpp
-C:\notatki-pulpit\Pulpit\JA 5\SobelFilter\SobelFilter\SobelFilter.cpp(119,31): warning C5030: atrybut „gnu::unused” nie został rozpoznany
-C:\notatki-pulpit\Pulpit\JA 5\SobelFilter\SobelFilter\SobelFilter.cpp(116,4): warning C4102: "std": etykieta, do której nie istnieje odwołanie
   SobelFilter.vcxproj -> C:\notatki-pulpit\Pulpit\JA 5\SobelFilter\Debug\SobelFilter.exe
