@@ -14,13 +14,13 @@ MyProc1 proc
 	mov heightI, R8d
 	mov widthI, R9d
 	
-	;mov r12d, DWORD PTR[rbp + 32]
+	
 	
 	mov R8d,5
 	
 	;mov ala,RCX
 	;mov rcx,5
-	mov eax,5
+	mov rax,[rsp+16+16+4]
 
 	ret
 MyProc1 endp

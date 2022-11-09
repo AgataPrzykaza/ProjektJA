@@ -20,6 +20,33 @@ unsigned char* modified;
 int height;
 int width;
 
+int Watki(string s)
+{
+    std::string asm1 = "JADll.dll";
+    std::string cpp = "CppDll.dll";
+    std::wstring stemp = s == "CppDLl" ? std::wstring(cpp.begin(), cpp.end()) : std::wstring(asm1.begin(), asm1.end());
+ 
+    HINSTANCE hGetProcIDDLL = LoadLibrary(stemp.c_str());
+
+    if (s == "CppDll")
+    {
+        if (!hGetProcIDDLL) {
+            std::cout << "could not load the dynamic library" << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        f_funci funci = (f_funci)GetProcAddress(hGetProcIDDLL, "kik");
+        if (!funci) {
+            std::cout << "could not locate the function" << std::endl;
+            return EXIT_FAILURE;
+        }
+    }
+    else
+    {
+
+    }
+}
+
 int CallCpp(unsigned char* a, unsigned char* b, int h, int w)
 {
     std::string s = "CppDll.dll";
@@ -110,6 +137,15 @@ int CallAsm(unsigned char* a, unsigned char* b, int h, int w)
     
     char ch=24;
     std::cout << "funci1() returned " << funci1(a, b, h, w, lol) << std::endl;
+
+
+
+  /*  unsigned char* NOwaSUPerTAblica = ( unsigned char*)funci1(a, b, h, w, lol);
+
+    std::cout<<NOwaSUPerTAblica[0];*/
+
+
+
 
     std::cout <<std::endl<< lol<<endl;
     int arrayStartOffset = 0;
