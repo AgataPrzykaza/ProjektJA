@@ -4,47 +4,107 @@
 #include<windows.h>
 #include<fstream>
 #include<stdio.h>
-
+#include <functional>
 
 
 //typedef int(* f_funci)(std::vector<char>);
-typedef int(*f_funci)(unsigned char*, unsigned char*, int, int);
+//typedef int(*f_funci)(unsigned char*, unsigned char*, int, int);
+typedef unsigned char*(*f_funci)(unsigned char*, unsigned char*, int, int,int);
+//typedef int(__stdcall* MyProc1)(unsigned char*, unsigned char*,int,int,_int32);
+typedef unsigned char*(__stdcall* MyProc1)(unsigned char*,unsigned char*,int,int,int);
 
-typedef int(__stdcall* MyProc1)(unsigned char*, unsigned char*,int,int,_int32);
 
 using namespace std;
 std::vector<char> V;
-
+int lol = 12;
 unsigned char* tab;
 unsigned char* modified;
 int height;
 int width;
 
-int Watki(string s)
+
+int Watki(string s,unsigned char*a,unsigned char* b,int numThreads,int h,int w)
 {
     std::string asm1 = "JADll.dll";
     std::string cpp = "CppDll.dll";
-    std::wstring stemp = s == "CppDLl" ? std::wstring(cpp.begin(), cpp.end()) : std::wstring(asm1.begin(), asm1.end());
+    std::wstring stemp = s == "CppDll" ? std::wstring(cpp.begin(), cpp.end()) : std::wstring(asm1.begin(), asm1.end());
  
     HINSTANCE hGetProcIDDLL = LoadLibrary(stemp.c_str());
+    HINSTANCE hGetProcIDDLL1 = LoadLibrary(stemp.c_str());
+    f_funci funci;
+    MyProc1 funci1;
+    std::function<unsigned char* (unsigned char*, unsigned char*, int, int,int)> fun;
+
+
+
 
     if (s == "CppDll")
+    {
+        if (!hGetProcIDDLL1) {
+            std::cout << "could not load the dynamic library" << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        funci= (f_funci)GetProcAddress(hGetProcIDDLL1, "kik");
+        if (!funci) {
+            std::cout << "could not locate the function" << std::endl;
+            return EXIT_FAILURE;
+        }
+
+       fun = funci;
+    }
+    else
     {
         if (!hGetProcIDDLL) {
             std::cout << "could not load the dynamic library" << std::endl;
             return EXIT_FAILURE;
         }
-
-        f_funci funci = (f_funci)GetProcAddress(hGetProcIDDLL, "kik");
-        if (!funci) {
+         funci1= (MyProc1)GetProcAddress(hGetProcIDDLL, "MyProc1");
+        if (!funci1) {
             std::cout << "could not locate the function" << std::endl;
             return EXIT_FAILURE;
         }
+
+        fun = funci1;
     }
-    else
+
+    int arrayStartOffset = 0;
+    auto start = std::chrono::steady_clock::now();
+
+    int numOfThreads= numThreads;
+    std::vector<std::thread> t;
+
+    
+  
+    unsigned char* alaaaa = new unsigned char[10];
+
+    for (int i = 0; i < numOfThreads; i++)
     {
+        t.push_back(std::thread(fun,a,b,h,w,4));
+       
 
     }
+
+    for (int i = 0; i < numOfThreads; i++)
+    {
+        if (t[i].joinable())
+        {
+            t[i].join();
+
+        }
+    }
+    auto end = std::chrono::steady_clock::now();
+
+    
+    std::chrono::duration<double> elapsed_seconds = end - start;
+
+    t.clear();
+
+    std::cout << "time: "<<elapsed_seconds.count()<<endl;
+
+    cout << (int)b[0];
+
+    return EXIT_SUCCESS;
 }
 
 int CallCpp(unsigned char* a, unsigned char* b, int h, int w)
@@ -64,7 +124,7 @@ int CallCpp(unsigned char* a, unsigned char* b, int h, int w)
         return EXIT_FAILURE;
     }
     int sa = 2;
-    std::cout << "funci() returned " << funci(a, b, h, w) << std::endl;
+    std::cout << "funci() returned " << funci(a, b, h, w,4) << std::endl;
 
     //int arrayStartOffset = 0;
     //auto start = std::chrono::steady_clock::now();
@@ -97,24 +157,7 @@ int CallCpp(unsigned char* a, unsigned char* b, int h, int w)
     return EXIT_SUCCESS;
 }
 
-//void Watki(int fun(), int a)
-//{
-//    int numOfThreads = 10;
-//    std::vector<std::thread> t;
-//
-//    for (int i = 0; i < numOfThreads; i++)
-//    {
-//        t.push_back(std::thread(fun, 3, 4));
-//    }
-//
-//    for (int i = 0; i < numOfThreads; i++)
-//    {
-//
-//        t[i].join();
-//
-//
-//    }
-//}
+
 
 int CallAsm(unsigned char* a, unsigned char* b, int h, int w)
 {
@@ -132,22 +175,23 @@ int CallAsm(unsigned char* a, unsigned char* b, int h, int w)
         return EXIT_FAILURE;
     }
 
-    _int32 lol = 12;
+    
 
     
     char ch=24;
-    std::cout << "funci1() returned " << funci1(a, b, h, w, lol) << std::endl;
 
-
+   // std::cout << "funci1() returned " << funci1(lol) << std::endl;
+    
+    
+  
+    unsigned char* ola = funci1(a,b,h,w,4);
+   
+    cout << int(ola[2]);
 
   /*  unsigned char* NOwaSUPerTAblica = ( unsigned char*)funci1(a, b, h, w, lol);
 
     std::cout<<NOwaSUPerTAblica[0];*/
 
-
-
-
-    std::cout <<std::endl<< lol<<endl;
     int arrayStartOffset = 0;
     auto start = std::chrono::steady_clock::now();
 
@@ -225,14 +269,14 @@ void BMPread(string s)
 
 
 
-        unsigned char* l;
-        l = new unsigned char[a.size()];
-        // std::cout << "R: " << int(buffer[0] & 0xff) << " G: " << int(buffer[1] & 0xff) << " B: " << int(buffer[2] & 0xff) << std::endl;
-        std::cout << "R: " << int(buffer[0]) << " G: " << int(buffer[1]) << " B: " << int(buffer[2]) << std::endl;
-        CallCpp(buffer, l, wysokosc, szerokosc);
-        std::cout << "R: " << int(l[0]) << " G: " << int(l[1]) << " B: " << int(l[2]) << std::endl;
-        //std::cout << "R: " << int(buffer[0] & 0xff) << " G: " << int(buffer[ 1] & 0xff) << " B: " << int(buffer[2] & 0xff) << std::endl;
-        bmp.close();
+        //unsigned char* l;
+        //l = new unsigned char[a.size()];
+        //// std::cout << "R: " << int(buffer[0] & 0xff) << " G: " << int(buffer[1] & 0xff) << " B: " << int(buffer[2] & 0xff) << std::endl;
+        //std::cout << "R: " << int(buffer[0]) << " G: " << int(buffer[1]) << " B: " << int(buffer[2]) << std::endl;
+        //CallCpp(buffer, l, wysokosc, szerokosc);
+        //std::cout << "R: " << int(l[0]) << " G: " << int(l[1]) << " B: " << int(l[2]) << std::endl;
+        ////std::cout << "R: " << int(buffer[0] & 0xff) << " G: " << int(buffer[ 1] & 0xff) << " B: " << int(buffer[2] & 0xff) << std::endl;
+        //bmp.close();
 
         char temp = 0;
 
@@ -375,8 +419,12 @@ int main()
     
 
     BMPread("C:/notatki-pulpit/Pulpit/JA 5/SobelFilter/parrots.bmp");
-    CallAsm(tab,modified,height,width);
-    cout << endl << height;
+
+    unsigned char* ala = new unsigned char[90];
+    Watki("CppDll",tab, modified, 4, height, width);
+    //CallCpp(tab, modified, height, width);
+   //CallAsm(tab,modified,height,width);
+    //cout << endl << height;
     //ifstream bmp("C:/notatki-pulpit/Pulpit/JA 5/SobelFilter/parrots.bmp",ios::binary);
      //przetworzBMP(bmp);
 

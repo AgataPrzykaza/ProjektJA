@@ -8,4 +8,4 @@
 #endif
 
 
-extern "C" MATHLIBRARY_API int kik(unsigned char* a, unsigned char* b, int h, int w);
+extern "C" MATHLIBRARY_API unsigned char* kik(unsigned char* a, unsigned char* b, int h, int w,int th);

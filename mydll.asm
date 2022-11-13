@@ -8,20 +8,28 @@ widthI DWORD 0			; the width of the image
 .CODE
 
 MyProc1 proc
+	
+	
 
-	mov arrayStart, RCX
-	mov readyArray, RDX
-	mov heightI, R8d
-	mov widthI, R9d
-	
-	
-	
-	mov R8d,5
-	
-	;mov ala,RCX
-	;mov rcx,5
-	mov rax,[rsp+16+16+4]
 
-	ret
+	;mov arrayStart, RCX
+	;mov readyArray, RDX
+	;mov heightI, R8d
+	;mov widthI, R9d
+	
+            
+        
+       ; mov rax,rcx
+        ;mov BYTE PTR[rax],5
+       ; mov rax,rcx
+
+        mov     rax, rdx
+        mov     DWORD PTR [rax],9
+
+        ret
+		
 MyProc1 endp
+
+
+
 END

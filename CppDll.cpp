@@ -5,7 +5,7 @@
 #include <limits.h>
 #include<vector>
 #include "CppDll.h"
-
+#include <iostream>
 //int kik(std::vector<char> a)
 //{
 //   /* auto temp = a[0];
@@ -17,7 +17,7 @@
 //    return a[2];
 ////}
 
-int kik(unsigned char* a, unsigned char* b, int h, int w)
+unsigned char* kik(unsigned char* a, unsigned char* b, int h, int w,int th)
 {
     /*    auto temp = a[0];
            a[0] = a[2];
@@ -26,8 +26,8 @@ int kik(unsigned char* a, unsigned char* b, int h, int w)
     b[0] = a[2];
     b[1] = a[1];
     b[2] = a[0];
+    
 
 
-
-    return a[2];
+    return b;
 }
