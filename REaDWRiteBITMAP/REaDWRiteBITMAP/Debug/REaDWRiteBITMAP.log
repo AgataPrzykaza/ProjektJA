@@ -1,0 +1,4 @@
+﻿  REaDWRiteBITMAP.cpp
+C:\notatki-pulpit\Pulpit\REaDWRiteBITMAP\REaDWRiteBITMAP\REaDWRiteBITMAP.cpp(61,19): warning C4101: "temp": lokalna zmienna, do której nie istnieje odwołanie
+  LINK : nie znaleziono elementu C:\notatki-pulpit\Pulpit\REaDWRiteBITMAP\Debug\REaDWRiteBITMAP.exe ani nie został on skompilowany podczas ostatniego konsolidowania przyrostowego; zostanie wykonana pełna konsolidacja
+  REaDWRiteBITMAP.vcxproj -> C:\notatki-pulpit\Pulpit\REaDWRiteBITMAP\Debug\REaDWRiteBITMAP.exe
