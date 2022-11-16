@@ -17,17 +17,24 @@
 //    return a[2];
 ////}
 
-unsigned char* kik(unsigned char* a, unsigned char* b, int h, int w,int th)
+unsigned char* kik(unsigned char* a, unsigned char* b, int h, int w,int ileBit,int position)
 {
-    /*    auto temp = a[0];
-           a[0] = a[2];
-             a[2] = temp;*/
-
-    b[0] = a[2];
-    b[1] = a[1];
-    b[2] = a[0];
     
+	for (int i = position; i < position + ileBit; i++)
+	{
+		int row = (i - i % w) / w;	//safe row calculation
 
+		int GX;
+		///if (i % w == 0 || i % w == w - 1 || row == 0) continue;
+		//else if (row == h - 1) break;
 
+		b[i] = a[i + 1] * -2 + a[i - 1] * 2 +
+		a[i + 1 - w] * -1 + a[i - 1 - w] * 1 +
+		a[i + 1 + w] * -1 + a[i - 1 + w] * 1;
+
+		
+		 
+	}
+      
     return b;
 }
