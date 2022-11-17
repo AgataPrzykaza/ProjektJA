@@ -38,38 +38,23 @@ unsigned char* tab;
 void setGrayScale(unsigned char* t, unsigned char* gray, int h, int w)
 {
     
-
-    //int addtionalPixels = w % 4;
-    //int currentByte = 0;
-
-    //for (int y = 0; y < h; y++)
-    //{
-    //    for (int x = 0; x < w; x++)
-    //    {
-
-    //        float blue = t[currentByte + 2] / 255.0f;
-    //        float green = t[currentByte + 1] / 255.0f;
-    //        float red = t[currentByte] / 255.0f;
-
-    //        float waged = red * 0.2126f + green * 0.7152f + blue * 0.0722f; //Good waged grayscale transformation
-
-    //        gray[y * w + x] = waged * 255.0f;
-
-    //        for (int i = 0; i < 3; i++)
-    //            t[currentByte + i] = waged * 255.0f;
-    //        currentByte += 3;
-    //    }
-    //    currentByte += addtionalPixels;
-    //}
-
     int index = 0;
     int step = 3 * width;
     for (int row = 0; row < height; ++row) {
         for (int col = 0; col < width * 3; col += 3) {
-            gray[index] = 0.11 * t[row * step + col] +
+            gray[index] = 0.3 * t[row * step + col] +
                 0.59 * t[row * step + col + 1] +
-                0.3 * t[row * step + col + 2];
-            index++;
+                0.11 * t[row * step + col + 2];
+
+            gray[index +1] = 0.3 * t[row * step + col] +
+                0.59 * t[row * step + col + 1] +
+                0.11 * t[row * step + col + 2];
+
+            gray[index+2] = 0.3 * t[row * step + col] +
+                0.59 * t[row * step + col + 1] +
+                0.11 * t[row * step + col + 2];
+            
+            index+=3;
         }
     }
 }
@@ -567,7 +552,7 @@ int main()
 {
     
 
-    BMPread("C:/notatki-pulpit/Pulpit/FilterSobelv1/JAApp/parrots.bmp");
+    BMPread("C:/notatki-pulpit/Pulpit/FilterSobelv1/JAApp/asd.bmp");
 
     unsigned char* ala = new unsigned char[90];
    
@@ -580,7 +565,7 @@ int main()
 
     
 
-   // saveImage(tab, "nowy.bmp");
+    saveImage(modified, "nowy.bmp");
 
     
 
