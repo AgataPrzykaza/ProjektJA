@@ -19,6 +19,7 @@ std::vector<char> V;
 int lol = 12;
 
 unsigned char* modified;
+
 int height;
 int width;
 
@@ -32,13 +33,14 @@ BITMAPFILEHEADER bmpFile;
 BITMAPINFOHEADER bmpInfo;
 unsigned char* header;
 unsigned char* tab;
+unsigned char* grayscale;
 //------------------------------------------
 
 
-void setGrayScale(unsigned char* t, unsigned char* gray, int h, int w)
+void setGrayScale(unsigned char* t, int h, int w)
 {
     
-    int index = 0;
+   /* int index = 0;
     int step = 3 * width;
     for (int row = 0; row < height; ++row) {
         for (int col = 0; col < width * 3; col += 3) {
@@ -55,6 +57,18 @@ void setGrayScale(unsigned char* t, unsigned char* gray, int h, int w)
                 0.11 * t[row * step + col + 2];
             
             index+=3;
+        }
+    }*/
+
+    int index = 0;
+    int step = 3 * width;
+    for (int row = 0; row < height; ++row) {
+        for (int col = 0; col < width * 3; col += 3) {
+            grayscale[index] = 0.3 * t[row * step + col] +
+                0.59 * t[row * step + col + 1] +
+                0.11 * t[row * step + col + 2];
+
+                index ++;
         }
     }
 }
@@ -105,31 +119,52 @@ int Watki(string s,unsigned char*a,unsigned char* b,int numThreads,int h,int w)
         fun = funci1;
     }
 
+    ///-------divide data to threads
+    int* length = new int[numThreads];
+    int arraySize = h * w;
+    int rest = arraySize % numThreads;
+
+    for (int i = 0; i < numThreads; i++)
+    {
+        length[i] = (arraySize - rest) / numThreads;
+    }
+    for (int i = 0; i < rest; i++)
+    {
+        length[i]++;
+    }
+
+
     int arrayStartOffset = 0;
+
+    //-----------------
+
+
+
+
     auto start = std::chrono::steady_clock::now();
 
     int numOfThreads= numThreads;
     std::vector<std::thread> t;
 
-    int ileBIt = 2*h*w;
+    int ileBIt = 3*h*w;
     
   
     unsigned char* alaaaa = new unsigned char[10];
 
     for (int i = 0; i < numOfThreads; i++)
     {
-        t.push_back(std::thread(fun,a,b,h,w,ileBIt,0));
+        t.push_back(std::thread(fun,a,b,h,w,length[i], arrayStartOffset));
+        arrayStartOffset += length[i];
        
 
     }
 
     for (int i = 0; i < numOfThreads; i++)
     {
-        if (t[i].joinable())
-        {
+        
             t[i].join();
 
-        }
+
     }
     auto end = std::chrono::steady_clock::now();
 
@@ -404,6 +439,7 @@ void BMPread(string s)
 
     f.close();
 
+    grayscale= new unsigned char[bmpInfo.biHeight * bmpInfo.biWidth];
 
 
 }
@@ -552,27 +588,24 @@ int main()
 {
     
 
-    BMPread("C:/notatki-pulpit/Pulpit/FilterSobelv1/JAApp/asd.bmp");
+    BMPread("C:/notatki-pulpit/Pulpit/FilterSobelv1/JAApp/pingwin.bmp");
 
     unsigned char* ala = new unsigned char[90];
    
-    setGrayScale(tab, modified, height, width);
+    setGrayScale(tab, height, width);
 
-    //Watki("CppDll",tab, modified, 4, height, width);
+    //Watki("CppDll",grayscale, modified, 2, height, width);
+    Watki("JADll", grayscale, modified, 2, height, width);
     //Watki("JADll", tab, modified, 4, height, width);
     //Watki("CppDll", tab, modified, 4, height, width);
 
 
     
 
-    saveImage(modified, "nowy.bmp");
+    saveImage(modified, "now.bmp");
 
     
 
-    for (int i=0; i < 100; i++)
-    {
-        nic[i] = 2;
-    }
    // Watki("JADll", nic, modified, 4, height, width);
 
      
@@ -581,46 +614,6 @@ int main()
 
    
 
-
-     //for (auto i = dataSize - 4; i >= 0; i -= 3)
-     //{
-     //    temp = img[i];
-     //    img[i] = img[i + 2];
-     //    img[i + 2] = temp;
-
-     //    std::cout << "R: " << int(img[i] & 0xff) << " G: " << int(img[i + 1] & 0xff) << " B: " << int(img[i + 2] & 0xff) << std::endl;
-     //}
-
-     /* std::string s = "CppDll.dll";
-      std::string s1 = "JADll.dll";
-      std::wstring stemp = std::wstring(s.begin(), s.end());
-      std::wstring stemp1 = std::wstring(s1.begin(), s1.end());
-      HINSTANCE hGetProcIDDLL = LoadLibrary(stemp.c_str());
-      HINSTANCE hGetProcIDDLL1 = LoadLibrary(stemp1.c_str());
-
-      if (!hGetProcIDDLL) {
-          std::cout << "could not load the dynamic library" << std::endl;
-          return EXIT_FAILURE;
-      }
-      if (!hGetProcIDDLL1) {
-          std::cout << "could not load the dynamic library" << std::endl;
-          return EXIT_FAILURE;
-      }
-
-      MyProc1 funci1 = (MyProc1)GetProcAddress(hGetProcIDDLL1, "MyProc1");
-      if (!funci1) {
-          std::cout << "could not locate the function" << std::endl;
-          return EXIT_FAILURE;
-      }
-
-      f_funci funci = (f_funci)GetProcAddress(hGetProcIDDLL, "kik");
-      if (!funci) {
-          std::cout << "could not locate the function" << std::endl;
-          return EXIT_FAILURE;
-      }
-
-     std::cout << "funci() returned " << funci() << std::endl;
-      std::cout << "funci1() returned " << funci1(3,4) << std::endl;
-      return EXIT_SUCCESS; */
+     
 
 }
