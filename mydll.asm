@@ -5,13 +5,15 @@ readyArray QWORD 0			; pointer for the modified array
 heightI DWORD 0			; the height of the image
 widthI DWORD 0			; the width of the image
 
-v1 DQ 1.0,2.0,1.0
+v dd 1,2,1
 
 .CODE
 
 MyProc1 proc
-	
-	
+
+;get data ----------------------------------------------------
+	push rbp
+	mov  rbp, rsp
 
 
 	mov arrayStart, RCX
@@ -19,37 +21,78 @@ MyProc1 proc
 	mov heightI, R8d
 	mov widthI, R9d
 	
-      
-
-     
-
-		 push    rbp
-       mov     rbp, rsp
-		  
+	mov eax, DWORD PTR[rbp + 48]
+	mov r15d,eax				;   Number of bits
+	mov eax,DWORD PTR[rbp+56]
+	mov r14d,eax				;	Position is stored 
+	
+;-----------------------------------------------------------		  
 		
 
+; Initialisation
+
+
+	mov rsi, arrayStart
+	mov rdi, readyArray
+
+	mov ecx, r14d				; Counter for loop
+
+	;Mask
+
+	mov r11d, heightI
+	dec r11d					; r11d = imageHeight-1
+
+	mov r12d, widthI
+	dec r12d;					; r12d = imageWidth-1
+
+	mov r9d, ecx				; use r9 for end of loop
+	add r9d, r15d				; ^
+
+	;Calculate the current row and column
+	mov eax, ecx	; save the cunter into eax
+	xor edx,edx		; clean edx for division
+	div widthI		; div to get modulo in edx.
+	mov eax, ecx	; save the counter again
+	sub eax, edx
+	mov r10d, edx	; save the modulo for later
+	xor edx,edx		; clean edx for division
+	div widthI		; finally row is saved in eax
+
+	; eax - row counter
+	; r10d - column counter
+
+
+CalculationStart:
 		
-		mov eax, DWORD PTR[rbp + 48]
-		mov r15d,eax
-		mov eax,DWORD PTR[rbp+56]
-		mov r14d,eax
-		mov eax,heightI
+		
 		
 
-	mov r10, 0000FFFF0000FFFFh
-	movq xmm10, r10	
+
+
+	;mov r10, 0000FFFF0000FFFFh
+	;movq xmm10, r10	
 	
 
-	mov r10,000100020001h
-	movq xmm0,r10
+	;mov r10,000100020001h
+	;movq xmm0,r10
 
-	mov r10,0FFFFFFF0000FFFFh
-	pinsrq xmm0,r10,1
+	;mov r10,0FFFFFFF0000FFFFh
+	;pinsrq xmm0,r10,1
 
-
-
+	;mov r8d,1000
+	;mov  rax, rcx
+	;movd xmm1,QWORD PTR[rax]
+	;movd xmm1, DWORD PTR[rcx+r8]
 	
+	;movss xmm0,[v]
+
+
+	;pinsrd xmm0,[v],1
+	;movss xmm10,[v] 
+	;pinsrd xmm0,[v],2
 	
+
+
 		pop     rbp
         ret
 		
