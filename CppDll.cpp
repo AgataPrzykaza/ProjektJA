@@ -6,16 +6,7 @@
 #include<vector>
 #include "CppDll.h"
 #include <iostream>
-//int kik(std::vector<char> a)
-//{
-//   /* auto temp = a[0];
-//       a[0] = a[2];
-//         a[2] = temp;*/
-//  
-//    a[2] = (BYTE)100;
-//
-//    return a[2];
-////}
+
 
 unsigned char* kik(unsigned char* a, unsigned char* b, int h, int w,int ileBit,int position)
 {
@@ -24,9 +15,9 @@ unsigned char* kik(unsigned char* a, unsigned char* b, int h, int w,int ileBit,i
 
 	for (int i = position; i < position + ileBit; i++)
 	{
-		int row = (i - i % w) / w;	//safe row calculation
-
-		int GX,GY;
+		int row = (i - i % w) / w;	//sprawdzenie row
+		
+		
 		if (i % w == 0 || i % w == w - 1 || row == 0)
 		{
 			index += 3;
@@ -38,7 +29,7 @@ unsigned char* kik(unsigned char* a, unsigned char* b, int h, int w,int ileBit,i
 			index += 3;
 			break;
 		}
-		//GY
+		//GY - + w czyli szerokosc wiersza by miec dostep do wyzej lub nizej
 	b[index]= a[i + w] * -2 + a[i - w] * 2 +
 		a[i - 1 + w] * -1 + a[i - 1 - w] * 1 +
 		a[i + 1 + w] * -1 + a[i + 1 - w] * 1;
@@ -50,6 +41,7 @@ unsigned char* kik(unsigned char* a, unsigned char* b, int h, int w,int ileBit,i
 		a[i - 1 + w] * -1 + a[i - 1 - w] * 1 +
 		a[i + 1 + w] * -1 + a[i + 1 - w] * 1;
 
+	
 	//gX
 		//b[index] = a[i + 1] * -2 + a[i - 1] * 2 +
 		//a[i + 1 - w] * -1 + a[i - 1 - w] * 1 +

@@ -594,10 +594,13 @@ int main()
    
     setGrayScale(tab, height, width);
 
-    //Watki("CppDll",grayscale, modified, 2, height, width);
+    //Watki("CppDll",grayscale, modified, 4, height, width);
     Watki("JADll", grayscale, modified, 2, height, width);
-    //Watki("JADll", tab, modified, 4, height, width);
-    //Watki("CppDll", tab, modified, 4, height, width);
+    
+    
+    
+    
+    
 
 
     
