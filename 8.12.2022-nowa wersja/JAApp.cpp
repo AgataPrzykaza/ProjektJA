@@ -62,40 +62,13 @@ void setGrayScale(int h, int w)
         // Przeskocz padding na koñcu wiersza
         index += padding;
     }
+
+    for (int i = 0; i < SizeOfdata; i++)
+    {
+        modified[i] = 0;
+    }
 }
-//void setGray()
-//{
-//    int index = 0;
-//    int step = 3 * width;
-//    const int paddingSize = (4 - (bmpInfo.biWidth * 3) % 4) % 4;
-//    for (int row = 0; row < 3*bmpInfo.biHeight; row++)
-//    {
-//        for (int col =0; col < 3*(bmpInfo.biWidth-paddingSize); col+=3)
-//        {
-//            /*if (col + 1 == bmpInfo.biWidth - paddingSize || col + 2 == bmpInfo.biWidth - paddingSize)
-//                break;*/
-//            grayscale[ row* bmpInfo.biWidth +col] = 0.3 * tab[row*(bmpInfo.biWidth) + col] +
-//                0.59 * tab[ row * (bmpInfo.biWidth) + col + 1] +
-//                0.11 * tab[ row * (bmpInfo.biWidth) + col + 2];
-//             grayscale[ row* bmpInfo.biWidth +col+1] = grayscale[ row* bmpInfo.biWidth +col];
-//             grayscale[ row* bmpInfo.biWidth + col + 2] = grayscale[ row* bmpInfo.biWidth + col];
-//
-//      /*      grayscale[index] = 0.3 * tab[row * (bmpInfo.biWidth) + col] +
-//                0.59 * tab[row * (bmpInfo.biWidth) + col + 1] +
-//                0.11 * tab[row * (bmpInfo.biWidth) + col + 2];
-//            grayscale[index + 1] = grayscale[index];
-//            grayscale[index+2] = grayscale[index];*/
-//
-//
-//
-//           index +=3;
-//           
-//        }
-//        index += 2*paddingSize;
-//        
-//    }
-//
-//}
+
 
 int Watki(string s,unsigned char*a,unsigned char* b,int numThreads,int h,int w)
 {
@@ -142,7 +115,26 @@ int Watki(string s,unsigned char*a,unsigned char* b,int numThreads,int h,int w)
         fun = funci1;
     }
 
-    ///-------divide data to threads
+    /////-------divide data to threads
+    //int* length = new int[numThreads];
+  
+    //int rest = bmpInfo.biHeight % numThreads;
+
+    //length[0] = (bmpInfo.biHeight) / numThreads*3;
+    //for (int i = 0; i < numThreads; i++)
+    //{
+    //    length[i++] =length[0]+3*(bmpInfo.biHeight) / numThreads;
+    //}
+    //for (int i = 0; i < rest; i++)
+    //{
+    //    length[i]++;
+    //}
+    ////length[numThreads - 1] += rest;
+
+    //int ileBit = length[0];
+    //int arrayStartOffset = 1;
+
+ /*   ///-------divide data to threads
     int* length = new int[numThreads];
     int arraySize = h * w;
     int rest = arraySize % numThreads;
@@ -157,7 +149,7 @@ int Watki(string s,unsigned char*a,unsigned char* b,int numThreads,int h,int w)
     }
 
 
-    int arrayStartOffset = 0;
+    int arrayStartOffset = 0;*/
 
     ////-----------------
     //int* threadN = new int[numThreads];
@@ -184,17 +176,38 @@ int Watki(string s,unsigned char*a,unsigned char* b,int numThreads,int h,int w)
 
     int numOfThreads= numThreads;
     std::vector<std::thread> t;
-
-    int ileBIt = 3*h*w;
+    int arrayStartOffset=1;
+   
+    //std::vector<int> liczbaRow(numOfThreads);
+    //int rest = h % numOfThreads;
+    //for (int i : liczbaRow)
+    //{
+    //    i = h / numThreads;
+    //    if (rest != 0) {
+    //        i += 1;
+    //        rest--;
+    //    }
+    //}
     
-  
-    unsigned char* alaaaa = new unsigned char[10];
+    int rest = h % numOfThreads;
+    
 
     for (int i = 0; i < numOfThreads; i++)
     {
-        t.push_back(std::thread(fun,a,b,h,w,length[i], arrayStartOffset));
-        arrayStartOffset += length[i];
-       
+       /* t.push_back(std::thread(fun,a,b,h,w,length[i], arrayStartOffset));
+        arrayStartOffset = +length[i];*/
+       int noRows = h - (numOfThreads * (h / numOfThreads)) > arrayStartOffset ? h / numOfThreads + 1 : h / numOfThreads;
+        
+        if (rest!=0)
+        {
+            rest--;
+            noRows++;
+        }
+        t.push_back(std::thread(fun, a, b, h, w, numOfThreads, arrayStartOffset));
+        arrayStartOffset += noRows;
+
+       /* t.push_back(std::thread(fun, a, b, h, w, liczbaRow[i], arrayStartOffset));
+        arrayStartOffset += liczbaRow[i];*/
 
     }
 
@@ -220,6 +233,34 @@ int Watki(string s,unsigned char*a,unsigned char* b,int numThreads,int h,int w)
 
 
 
+//void BMPget(string s)
+//{
+//    ifstream f;
+//    f.open(s, std::ios::in | std::ios::binary);
+//    if (!f.is_open())
+//    {
+//        cout << "File could not open" << endl;
+//        return;
+//    }
+//
+//    header = new unsigned char[sizeof(bmpFile)+sizeof(bmpInfo)];
+//    f.read(reinterpret_cast<char*>(header), sizeof(bmpFile) + sizeof(bmpInfo));
+//    f.clear();
+//    f.seekg(0);
+//    f.read((char*)&bmpFile, sizeof(bmpFile) );
+//    f.read((char*)&bmpInfo,  sizeof(bmpInfo));
+//
+//    SizeOfdata = bmpFile.bfSize - sizeof(bmpFile) - sizeof(bmpInfo);
+//    
+//    tab = new unsigned char[SizeOfdata];
+//    f.read(reinterpret_cast<char*>(tab), SizeOfdata);
+//    f.close();
+//    grayscale = new unsigned char[SizeOfdata];
+//    modified= new unsigned char[SizeOfdata];
+//
+//}
+
+
 void BMPget(string s)
 {
     ifstream f;
@@ -237,18 +278,15 @@ void BMPget(string s)
     f.read((char*)&bmpFile, 14);
     f.read((char*)&bmpInfo, 40);
 
-    SizeOfdata = bmpFile.bfSize - 54; 
-    
+    SizeOfdata = bmpFile.bfSize - 54;
+
     tab = new unsigned char[SizeOfdata];
     f.read(reinterpret_cast<char*>(tab), SizeOfdata);
     f.close();
     grayscale = new unsigned char[SizeOfdata];
-    modified= new unsigned char[SizeOfdata];
+    modified = new unsigned char[SizeOfdata];
 
 }
-
-
-
 
 
 
@@ -317,7 +355,7 @@ void BMPsave(unsigned char* table ,const char* destinationFile)
         return;
     }
 
-    file.write(reinterpret_cast<char*>(header), 54);
+    file.write(reinterpret_cast<char*>(header), 54); //54
     file.write(reinterpret_cast<char*>(table), SizeOfdata);
     file.close();
 
@@ -361,15 +399,26 @@ void saveImage(unsigned char* modifiedData, const char* destinationFile) {
 int main()
 {
     
-    BMPget("C:/notatki-pulpit/Pulpit/test-JA/FilterSobelv2/JAApp/24listek.bmp");
-   // setGray();
+    BMPget("C:/notatki-pulpit/Pulpit/test-JA/FilterSobelv2/JAApp/pingwin.bmp");
+
     setGrayScale(bmpInfo.biHeight,bmpInfo.biWidth);
-   Watki("CppDll", tab, modified, 4, bmpInfo.biHeight,bmpInfo.biWidth);
-    BMPsave(modified, "nowyy.bmp");
+  // Watki("CppDll", tab, modified, 12, bmpInfo.biHeight,bmpInfo.biWidth);
+  
 
 
+    int ileWatkow = 1;
 
+    int opcja = 0;
 
+    if (opcja == 0)
+    {
+        Watki("JADll", tab, modified, ileWatkow, bmpInfo.biHeight, bmpInfo.biWidth);
+    }
+    else if (opcja == 1)
+    {
+        Watki("CppDll", tab, modified, ileWatkow, bmpInfo.biHeight, bmpInfo.biWidth);
+    }
+  BMPsave(modified, "nowyy.bmp");
 
 
 
